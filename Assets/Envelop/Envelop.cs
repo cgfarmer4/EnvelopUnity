@@ -113,10 +113,12 @@ public class Envelop : MonoBehaviour {
             sphere.transform.localScale += new Vector3(RADIUS, RADIUS, RADIUS);
             sphere.transform.parent = EnvelopModel.transform;
             inputs[x] = sphere;
+            sphere.name = "Input" + x;
         }
     }
 
     void ColumnModels() {
+        int numColumns = 0;
         columns = new ArrayList();
         foreach(Vector3 position in EnvelopVenue.COLUMN_POSITIONS) {
             GameObject cylinder;
@@ -127,11 +129,15 @@ public class Envelop : MonoBehaviour {
             float theta = (float) Math.Atan2(cylinder.transform.position.x, cylinder.transform.position.y) - (float)Math.PI / 2;
             cylinder.transform.Rotate(0, theta * (180 / (float)Math.PI), 0, Space.Self);
             cylinder.transform.parent = EnvelopModel.transform;
+            cylinder.name = "Column" + numColumns;
+            numColumns++;
             columns.Add(cylinder);
         }
     }
 
     void ChannelModels() {
+        int speakerNum = 0;
+
         foreach(GameObject column in columns) {
             //RADIANS
             //float columnTheta = (float)Math.Atan2(column.transform.position.y, column.transform.position.x) - (float)Math.PI / 2;
@@ -145,6 +151,8 @@ public class Envelop : MonoBehaviour {
             channelBox1.transform.position = new Vector3(column.transform.position.x, 1 * FEET, column.transform.position.z);
             channelBox1.transform.LookAt(Vector3.zero);
             channelBox1.transform.Rotate(-SPEAKER_ANGLE, 0, 0, Space.Self);
+            channelBox1.name = "Speaker" + speakerNum;
+            speakerNum++;
             //channelBox1.transform.Rotate(-SPEAKER_ANGLE, -columnDegrees, 0, Space.Self);
 
 			GameObject channelBox2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -152,7 +160,8 @@ public class Envelop : MonoBehaviour {
 			channelBox2.transform.localScale = new Vector3(21 * INCHES, 16 * INCHES, 15 * INCHES);
 			channelBox2.transform.position = new Vector3(column.transform.position.x, 6 * FEET, column.transform.position.z);
             channelBox2.transform.LookAt(new Vector3(0, HEIGHT / 2, 0));
-
+			channelBox2.name = "Speaker" + speakerNum;
+			speakerNum++;
 
 			GameObject channelBox3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
             channelBox3.transform.parent = EnvelopModel.transform;
@@ -160,17 +169,23 @@ public class Envelop : MonoBehaviour {
 			channelBox3.transform.position = new Vector3(column.transform.position.x, 11 * FEET, column.transform.position.z);
             channelBox3.transform.LookAt(Vector3.zero);
             channelBox3.transform.Rotate(-SPEAKER_ANGLE, 0, 0, Space.Self);
+            channelBox3.name = "Speaker" + speakerNum;
+			speakerNum++;
             //channelBox3.transform.Rotate(-SPEAKER_ANGLE, -columnDegrees, 0, Space.Self);
         }
     }
 
     void SubModels() {
+        int numSubs = 0;
+
         foreach(Vector3 subPosition in EnvelopVenue.SUB_POSITIONS) {
             GameObject subBox = GameObject.CreatePrimitive(PrimitiveType.Cube);
             subBox.transform.parent = EnvelopModel.transform;
             subBox.transform.localScale = new Vector3(29 * INCHES, 20 * INCHES, 29 * INCHES);
 			subBox.transform.position = new Vector3(subPosition.x, 10 * INCHES, subPosition.y);
             subBox.transform.LookAt(Vector3.zero);
+            subBox.name = "Sub" + numSubs;
+            numSubs++;
         }
     }
 
@@ -183,7 +198,9 @@ public class Envelop : MonoBehaviour {
             boxPosition++;
 
             cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.parent = EnvelopModel.transform;
             cube.transform.localScale += new Vector3(RADIUS, RADIUS, RADIUS);
+            cube.name = "Channel" + i;
 
             if(i != 0 && i % 3 == 0) {
                currentColumn++;
