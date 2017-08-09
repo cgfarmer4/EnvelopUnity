@@ -28,8 +28,10 @@ public class oscControl : MonoBehaviour
 
 		// Initialize OSC servers (listeners)
 		myServer = OSCHandler.Instance.CreateServer("myServer", inPort);
+
 		// Set buffer size (bytes) of the server (default 1024)
 		myServer.ReceiveBufferSize = 1024;
+
 		// Set the sleeping time of the thread (default 10)
 		myServer.SleepMilliseconds = 10;
 

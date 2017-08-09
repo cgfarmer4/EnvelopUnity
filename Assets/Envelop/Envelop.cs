@@ -12,13 +12,16 @@ public class Envelop : MonoBehaviour {
 	private static float SPEAKER_ANGLE = 22.0f;
 	private static float RADIUS = 20.0f * INCHES;
 	private static float HEIGHT = 12.0f * FEET;
+
     private static int NUM_INPUTS = 2;
+    private static int NUM_CHANNELS = 24;
 
     //Model Objects
     GameObject EnvelopModel;
     Midway EnvelopVenue;
     ArrayList columns;
     GameObject[] inputs = new GameObject[NUM_INPUTS];
+    GameObject[] outputChannels = new GameObject[NUM_CHANNELS];
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +32,7 @@ public class Envelop : MonoBehaviour {
 
         ColumnModels();
         ChannelModels();
+        ChannelLevelModels();
         SubModels();
         InputModels();
     }
@@ -62,18 +66,18 @@ public class Envelop : MonoBehaviour {
 		// Address
 		string address = pckt.Address.Substring(1);
 
-        if(address == "bundle") {
+        if(address == "bundle") { // Position 
             foreach(OSCMessage message in pckt.Data) {
 
-                Debug.Log(message.Address);
+                //Debug.Log(message.Address);
 
                 if(message.Address.Substring(1,6) == "source") {
                     String[] packetSplit = message.Address.Split(delimiterChars);
                     int inputNumber = Int32.Parse(packetSplit[2]);
 
-                    Debug.Log("0::" + message.Data[0]);
-                    Debug.Log("1::" + message.Data[1]);
-                    Debug.Log("2::" + message.Data[2]);
+                    //Debug.Log("0::" + message.Data[0]);
+                    //Debug.Log("1::" + message.Data[1]);
+                    //Debug.Log("2::" + message.Data[2]);
 
                     float positionX = Midway.cx + float.Parse(message.Data[0].ToString()) * Midway.xRange / 2;
                     float positionY = Midway.cy + float.Parse((string)message.Data[2].ToString()) * Midway.yRange / 2;
@@ -83,6 +87,23 @@ public class Envelop : MonoBehaviour {
 
                 }
             }
+        }
+        else { // Output Levels
+            char[] delimiters = { '/' };
+            String[] splitAddress = pckt.Address.Split(delimiters);
+
+            if (splitAddress[1] == "envelop"){
+                int channel = Int32.Parse(splitAddress[3].Substring(2));
+                outputChannels[channel - 1].transform.localScale = new Vector3(100.0f, 100.0f, 100.0f) * (float)pckt.Data[0];
+			}
+
+        }
+
+
+        if (address == "message")
+        {
+            OSCMessage message = (OSCMessage)pckt.Data[0];
+			Debug.Log(message);
         }
 	}
 
@@ -150,6 +171,28 @@ public class Envelop : MonoBehaviour {
             subBox.transform.localScale = new Vector3(29 * INCHES, 20 * INCHES, 29 * INCHES);
 			subBox.transform.position = new Vector3(subPosition.x, 10 * INCHES, subPosition.y);
             subBox.transform.LookAt(Vector3.zero);
+        }
+    }
+
+    void ChannelLevelModels() {
+        int boxPosition = 1;
+        int currentColumn = 0;
+
+        for (int i = 0; i < NUM_CHANNELS; i++) {
+            GameObject cube;
+            boxPosition++;
+
+            cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.transform.localScale += new Vector3(RADIUS, RADIUS, RADIUS);
+
+            if(i != 0 && i % 3 == 0) {
+               currentColumn++;
+               boxPosition = 1;
+            }
+
+            GameObject column = (GameObject)columns[currentColumn];
+            cube.transform.position = new Vector3(column.transform.position.x + 20 * boxPosition, column.transform.position.y + 20 * boxPosition, column.transform.position.z + 20 * boxPosition);
+            outputChannels[i] = cube;
         }
     }
 }
