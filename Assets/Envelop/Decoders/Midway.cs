@@ -68,7 +68,6 @@ public class Midway : Venue
 		EnvelopModel = new GameObject("EnvelopMidway");
 		ColumnModels();
 		ChannelModels();
-		ChannelLevelModels();
 		SubModels();
 		InputModels();
     }
@@ -113,12 +112,6 @@ public class Midway : Venue
 
 		foreach (GameObject column in columns)
 		{
-			//RADIANS
-			//float columnTheta = (float)Math.Atan2(column.transform.position.y, column.transform.position.x) - (float)Math.PI / 2;
-
-			//CONVERT RADIANS to DEGRESS
-			//float columnDegrees = columnTheta * (180 / (float)Math.PI);
-
 			GameObject channelBox1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			channelBox1.transform.parent = EnvelopModel.transform;
 			channelBox1.transform.localScale = new Vector3(21 * INCHES, 16 * INCHES, 15 * INCHES);
@@ -127,9 +120,9 @@ public class Midway : Venue
 			channelBox1.transform.Rotate(-SPEAKER_ANGLE, 0, 0, Space.Self);
 			channelBox1.name = "Speaker" + speakerNum;
 			channelBox1.tag = "Speaker";
-			speakerNum++;
-			//channelBox1.transform.Rotate(-SPEAKER_ANGLE, -columnDegrees, 0, Space.Self);
-
+			outputChannels[speakerNum] = channelBox1;
+            speakerNum++;
+			
 			GameObject channelBox2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			channelBox2.transform.parent = EnvelopModel.transform;
 			channelBox2.transform.localScale = new Vector3(21 * INCHES, 16 * INCHES, 15 * INCHES);
@@ -137,6 +130,7 @@ public class Midway : Venue
 			channelBox2.transform.LookAt(new Vector3(0, HEIGHT / 2, 0));
 			channelBox2.name = "Speaker" + speakerNum;
 			channelBox2.tag = "Speaker";
+            outputChannels[speakerNum] = channelBox2;
 			speakerNum++;
 
 			GameObject channelBox3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -147,8 +141,9 @@ public class Midway : Venue
 			channelBox3.transform.Rotate(-SPEAKER_ANGLE, 0, 0, Space.Self);
 			channelBox3.name = "Speaker" + speakerNum;
 			channelBox3.tag = "Speaker";
+            outputChannels[speakerNum] = channelBox3;
 			speakerNum++;
-			//channelBox3.transform.Rotate(-SPEAKER_ANGLE, -columnDegrees, 0, Space.Self);
+			
 		}
 	}
 
@@ -169,31 +164,4 @@ public class Midway : Venue
 		}
 	}
 
-	void ChannelLevelModels()
-	{
-		int boxPosition = 1;
-		int currentColumn = 0;
-
-		for (int i = 0; i < NUM_CHANNELS; i++)
-		{
-			GameObject cube;
-			boxPosition++;
-
-			cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			cube.transform.parent = EnvelopModel.transform;
-			cube.transform.localScale += new Vector3(RADIUS, RADIUS, RADIUS);
-			cube.name = "Channel" + i;
-			cube.tag = "EnvelopChannelLevel";
-
-			if (i != 0 && i % 3 == 0)
-			{
-				currentColumn++;
-				boxPosition = 1;
-			}
-
-			GameObject column = (GameObject)columns[currentColumn];
-			cube.transform.position = new Vector3(column.transform.position.x + 20 * boxPosition, column.transform.position.y + 20 * boxPosition, column.transform.position.z + 20 * boxPosition);
-            outputChannels[i] = cube;
-		}
-	}
 }

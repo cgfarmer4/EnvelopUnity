@@ -5,7 +5,7 @@ using UnityEngine;
 public class DaydreamInput : MonoBehaviour
 {
     public LineRenderer laser;
-    private GameObject activeObject;
+    public static GameObject activeObject;
     private static float RayDistance = 200f;
 
     // Use this for initialization
@@ -40,7 +40,7 @@ public class DaydreamInput : MonoBehaviour
         }
 
         //Click finished
-        if (GvrControllerInput.ClickButtonUp) {
+        if (GvrControllerInput.ClickButtonUp && activeObject != null) {
             DeactivateActiveObject();
         }
     }

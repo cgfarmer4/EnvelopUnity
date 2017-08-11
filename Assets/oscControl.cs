@@ -10,8 +10,8 @@ public class oscControl : MonoBehaviour
 {
 	private OSCServer myServer;
 
-	public string outIP = "127.0.0.1";
-	public int outPort = 9000;
+	public string outIP = "192.168.0.132";
+	public int outPort = 5555;
 	public int inPort = 57121;
 
 	// Buffer size of the application (stores 100 messages from different servers)

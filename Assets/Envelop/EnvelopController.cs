@@ -27,6 +27,20 @@ public class EnvelopController : MonoBehaviour
 			OSCHandler.Instance.packets.Remove(OSCHandler.Instance.packets[i]);
 			i--;
 		}
+
+        if(DaydreamInput.activeObject != null) {
+            if(DaydreamInput.activeObject.tag == "EnvelopAudioInput") {
+                //Do some venu vector math.
+
+                List<float> list = new List<float>();
+                list.Add(.05f);
+                list.Add(-1.25f);
+                list.Add(-3.009f);
+				
+                //Send back to Ableton Live
+                OSCHandler.Instance.SendMessageToClient("myClient", "/source/1/xyz", list);
+            }
+        }
 	}
 
 	// Process OSC message
