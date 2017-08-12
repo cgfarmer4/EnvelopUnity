@@ -8,17 +8,16 @@ public class EnvelopController : MonoBehaviour
 {
     EnvelopModel envelopModel;
 
-
 	// Use this for initialization
 	void Start() {
         gameObject.AddComponent<oscControl>();
+        gameObject.AddComponent<AudioPositionOutput>();
         envelopModel = new EnvelopModel();
     }
 
 	// Update is called once per frame
 	void Update() {
 		// Reads all the messages received between the previous update and this one
-		// Read received messages
 		for (var i = 0; i < OSCHandler.Instance.packets.Count; i++)
 		{
 			// Process OSC
@@ -27,20 +26,6 @@ public class EnvelopController : MonoBehaviour
 			OSCHandler.Instance.packets.Remove(OSCHandler.Instance.packets[i]);
 			i--;
 		}
-
-        if(DaydreamInput.activeObject != null) {
-            if(DaydreamInput.activeObject.tag == "EnvelopAudioInput") {
-                //Do some venu vector math.
-
-                List<float> list = new List<float>();
-                list.Add(.05f);
-                list.Add(-1.25f);
-                list.Add(-3.009f);
-				
-                //Send back to Ableton Live
-                OSCHandler.Instance.SendMessageToClient("myClient", "/source/1/xyz", list);
-            }
-        }
 	}
 
 	// Process OSC message

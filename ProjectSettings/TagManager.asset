@@ -9,6 +9,7 @@ TagManager:
   - Speaker
   - Sub
   - EnvelopChannelLevel
+  - EnvelopAudioPosition
   layers:
   - Default
   - TransparentFX
