@@ -24,16 +24,10 @@ public class AudioPositionOutput : MonoBehaviour {
         //Update position and send OSC message
         if (DaydreamInput.activeObject != null && DaydreamInput.activeObject.tag == "EnvelopAudioPosition")
         {
-            // Calculate X, Y, Z values in accordance with the active model	
-            List<float> list = new List<float>();
+            // Calculate X, Y, Z values in accordance with the active model
             GameObject selected = DaydreamInput.activeObject;
 
-            //list.Add(selected.transform.position.y);
-            //list.Add(selected.transform.position.z);
-            //list.Add(selected.transform.position.x);
-
             //Send positional data back to Ableton Live  (eap -> envelop audio position)
-
             OSCHandler.Instance.SendMessageToClient("myClient", "/eap/1/x", selected.transform.position.x);
             OSCHandler.Instance.SendMessageToClient("myClient", "/eap/1/y", selected.transform.position.y);
             OSCHandler.Instance.SendMessageToClient("myClient", "/eap/1/z", selected.transform.position.z);
